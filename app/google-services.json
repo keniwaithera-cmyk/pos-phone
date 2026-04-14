@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "159808922012",
+    "project_id": "math-pract-e2c49",
+    "storage_bucket": "math-pract-e2c49.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159808922012:android:6bfc35d7b148dc69af2859",
+        "android_client_info": {
+          "package_name": "com.example.possystem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXoqgRhXgquQpbPnkRJ38fXwiOq2oPchM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
