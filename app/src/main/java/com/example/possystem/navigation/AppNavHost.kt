@@ -7,16 +7,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.possystem.ui.theme.screens.dashboard.Dashboard
 import com.example.possystem.ui.theme.screens.login.LoginScreen
+import com.example.possystem.ui.theme.screens.product.AddProductScreen
 import com.example.possystem.ui.theme.screens.register.RegisterScreen
 
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUTE_LOGIN // ✅ Start on Login, not Register
+    startDestination: String = ROUTE_ADD_PRODUCT // ✅ Start on Login, not Register
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
-        composable(ROUTE_LOGIN) { LoginScreen(navController) }       // ✅ Fixed
-        composable(ROUTE_REGISTER) { RegisterScreen(navController) } // ✅ Correct
-        composable(ROUTE_DASHBOARD) { Dashboard(navController) }     // ✅ Correct
+        composable(ROUTE_LOGIN) { LoginScreen(navController) }
+        composable(ROUTE_REGISTER) { RegisterScreen(navController) }
+        composable(ROUTE_DASHBOARD) { Dashboard(navController) }
+        composable(ROUTE_ADD_PRODUCT) { AddProductScreen(navController) }
     }
 }

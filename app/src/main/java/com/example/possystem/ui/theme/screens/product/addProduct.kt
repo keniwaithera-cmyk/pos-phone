@@ -37,14 +37,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.possystem.data.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddProductScreen() {
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+fun AddProductScreen(navController: NavController) {
+    var imageUrl by remember { mutableStateOf<Uri?>(null) }
     var productName by remember { mutableStateOf("") }
     var productPrice by remember { mutableStateOf("") }
     var productQuantity by remember { mutableStateOf("") }
@@ -53,8 +58,11 @@ fun AddProductScreen() {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        imageUri = uri
+        imageUrl = uri
     }
+
+    val productViewModel: ProductViewModel = viewModel()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -85,9 +93,9 @@ fun AddProductScreen() {
                     .size(120.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                if (imageUri != null) {
+                if (imageUrl != null) {
                     Image(
-                        painter = rememberAsyncImagePainter(imageUri),
+                        painter = rememberAsyncImagePainter(imageUrl),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -112,7 +120,6 @@ fun AddProductScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
             OutlinedTextField(
                 value = productName,
                 onValueChange = { productName = it },
@@ -123,7 +130,6 @@ fun AddProductScreen() {
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
 
             OutlinedTextField(
                 value = productPrice,
@@ -137,7 +143,6 @@ fun AddProductScreen() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-
             OutlinedTextField(
                 value = productQuantity,
                 onValueChange = { productQuantity = it },
@@ -150,7 +155,6 @@ fun AddProductScreen() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Description
             OutlinedTextField(
                 value = productDescription,
                 onValueChange = { productDescription = it },
@@ -163,10 +167,17 @@ fun AddProductScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Save Button
             Button(
                 onClick = {
-
+                    productViewModel.uploadProduct(
+                        imageUrl,
+                        productName,
+                        productPrice,       // Fixed: was `price`
+                        productQuantity,    // Fixed: was `quantity`
+                        productDescription, // Fixed: was `description`
+                        context,
+                        navController       // Fixed: was missing
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -184,5 +195,5 @@ fun AddProductScreen() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AddProductScreenPreview() {
-    AddProductScreen()
+    AddProductScreen(rememberNavController())
 }
