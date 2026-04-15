@@ -29,6 +29,8 @@ class ProductViewModel : ViewModel() {
         price: String,
         quantity: String,
         description: String,
+        dateManufactured: String,   // NEW
+        barcodeNumber: String,      // NEW
         context: Context,
         navController: NavController
     ) {
@@ -37,12 +39,14 @@ class ProductViewModel : ViewModel() {
                 val imageUrl = imageUri?.let { uploadToCloudinary(context, it) }
                 val ref = FirebaseDatabase.getInstance().getReference("product").push()
                 val productData = mapOf(
-                    "id" to ref.key,
-                    "productName" to productName,
-                    "price" to price,               // Fixed: matches ProductModel field name
-                    "quantity" to quantity,          // Fixed: matches ProductModel field name
-                    "description" to description,    // Fixed: matches ProductModel field name
-                    "imageUrl" to imageUrl
+                    "id"               to ref.key,
+                    "productName"      to productName,
+                    "price"            to price,
+                    "quantity"         to quantity,
+                    "description"      to description,
+                    "imageUrl"         to imageUrl,
+                    "dateManufactured" to dateManufactured,  // NEW
+                    "barcodeNumber"    to barcodeNumber      // NEW
                 )
                 ref.setValue(productData).await()
                 withContext(Dispatchers.Main) {

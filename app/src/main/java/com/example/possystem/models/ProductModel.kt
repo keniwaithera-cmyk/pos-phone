@@ -7,4 +7,6 @@ data class ProductModel(
     var quantity: String? = null,
     var description: String? = null,
     var imageUrl: String? = null,
+    var dateManufactured: String? = null,   // NEW: Date of manufacture
+    var barcodeNumber: String? = null       // NEW: Barcode number (scanned or manual)
 )
