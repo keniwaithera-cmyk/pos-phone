@@ -52,7 +52,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.possystem.R
 import com.example.possystem.data.AuthViewModel
 import com.example.possystem.navigation.ROUTE_LOGIN
-import com.example.possystem.ui.theme.screens.login.LoginScreen
 
 @Composable
 fun RegisterScreen(navController: NavController) {
@@ -68,7 +67,7 @@ fun RegisterScreen(navController: NavController) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.airplane_bg),
+            painter = painterResource(id = R.drawable.`logo`),
             contentDescription = "Background",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -83,7 +82,7 @@ fun RegisterScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.airplane_bg),
+                painter = painterResource(id = R.drawable.`logo`),
                 contentDescription = "logo",
                 modifier = Modifier
                     .size(100.dp)

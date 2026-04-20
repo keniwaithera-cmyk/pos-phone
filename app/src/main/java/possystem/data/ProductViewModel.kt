@@ -5,7 +5,6 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -19,14 +18,15 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.OkHttp
+// FIX #4: Removed wrong "import okhttp3.OkHttp" — that class does not exist.
+//         OkHttpClient below is the correct one.
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import java.io.InputStream
 
 class ProductViewModel:ViewModel() {
-    val cloudinaryUrl = "https://api.cloudinary.com/v1_1/dxbm4rqv1/image/upload"
+    val cloudinaryUrl = "https://api.cloudinary.com/v1_1/dd5f3uije/image/upload"
     val uploadPreset = "images_folder"
 
     fun uploadProduct(imageUri: Uri?,product_name:String,price:String,quantity
@@ -54,8 +54,9 @@ class ProductViewModel:ViewModel() {
                 }
 
             }catch (e: Exception){
+                Log.e("ProductViewModel", "Error saving product", e)
                 withContext(Dispatchers.Main){
-                    Toast.makeText(context,"Product not saved",Toast.LENGTH_LONG).show()
+                    Toast.makeText(context,"Error: ${e.message}",Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -78,8 +79,9 @@ class ProductViewModel:ViewModel() {
         return secureUrl ?: throw Exception("Failed to get image URL")
     }
 
-    private val _products =mutableStateListOf<ProductModel>()
+    private val _products = mutableStateListOf<ProductModel>()
     val products: List<ProductModel> = _products
+
     fun fetchProduct(context: Context){
         val ref = FirebaseDatabase.getInstance().getReference("Products")
         ref.get().addOnSuccessListener { snapshot ->
@@ -87,17 +89,10 @@ class ProductViewModel:ViewModel() {
             for (child in snapshot.children){
                 val product = child.getValue(ProductModel::class.java)
                 product?.let { it.id = child.key
-                _products.add(it)}
+                    _products.add(it)}
             }
         }.addOnFailureListener {
             Toast.makeText(context,"Failed to load products", Toast.LENGTH_LONG).show()
-
         }
-
     }
-
-
-
-
-
 }

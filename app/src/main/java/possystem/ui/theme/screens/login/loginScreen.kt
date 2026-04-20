@@ -46,7 +46,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.possystem.R
 import com.example.possystem.data.AuthViewModel
-import com.example.possystem.navigation.ROUTE_LOGIN
 import com.example.possystem.navigation.ROUTE_REGISTER
 
 @Composable
@@ -60,7 +59,7 @@ fun LoginScreen(navController: NavController) {
         .fillMaxSize()
         .systemBarsPadding()) {
         Image(
-            painter = painterResource(id = R.drawable.airplane_bg),
+            painter = painterResource(id = R.drawable.`logo`),
             contentDescription = "Background of an airplane at sunset",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -75,7 +74,7 @@ fun LoginScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.airplane_bg),
+                painter = painterResource(id = R.drawable.`logo`),
                 contentDescription = "logo",
                 modifier = Modifier
                     .size(150.dp)

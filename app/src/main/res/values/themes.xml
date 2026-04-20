@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.PosSystem" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- FIX: Changed parent from "android:Theme.Material.Light.NoActionBar"
+         to "Theme.MaterialComponents.DayNight.NoActionBar" which is required
+         for Jetpack Compose + Material3 apps -->
+    <style name="Theme.POSSystem" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
 </resources>

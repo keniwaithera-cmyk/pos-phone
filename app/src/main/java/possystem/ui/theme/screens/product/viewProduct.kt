@@ -85,7 +85,7 @@ fun ProductCard(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text("Confirm Delete") },
-            text = { Text("Are you sure you want to delete this patient?") },
+            text = { Text("Are you sure you want to delete this product?") },
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false
@@ -116,7 +116,7 @@ fun ProductCard(
                 product.imageUrl?.let { imageUrl ->
                     AsyncImage(
                         model = imageUrl,
-                        contentDescription = "Patient Image",
+                        contentDescription = "Product Image",
                         modifier = Modifier
                             .size(64.dp)
                             .clip(CircleShape)
@@ -155,7 +155,7 @@ fun ProductCard(
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(
-                    onClick = { navController.navigate("update_patient/${product.id}") }
+                    onClick = { navController.navigate("update_product/${product.id}") }
                 ) {
                     Text(
                         text = "Update",

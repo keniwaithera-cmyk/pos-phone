@@ -1,7 +1,7 @@
 package com.example.possystem.ui.theme.screens.product
 
-import android.graphics.Paint
-import android.graphics.Paint.Align
+// FIX #2: Removed unused/wrong imports: android.graphics.Paint, Paint.Align,
+//         androidx.compose.material.icons.filled.Lock, LineHeightStyle, LocalContentColor, systemBarsPadding
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -14,17 +14,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -44,7 +41,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -93,7 +89,6 @@ fun AddProductScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
 
             Box(
                 modifier = Modifier
@@ -176,7 +171,7 @@ fun AddProductScreen(navController: NavController) {
                     OutlinedTextField(
                         value = dateManufacture,
                         onValueChange = { dateManufacture = it },
-                        label = { Text("dateManufacture", color = Color.Black) },
+                        label = { Text("Date of Manufacture", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = Color.Red,
@@ -188,7 +183,7 @@ fun AddProductScreen(navController: NavController) {
                     OutlinedTextField(
                         value = barcodeNumber,
                         onValueChange = { barcodeNumber = it },
-                        label = { Text("barcodeNumber", color = Color.Black) },
+                        label = { Text("Barcode Number", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = Color.Red,
@@ -213,19 +208,34 @@ fun AddProductScreen(navController: NavController) {
                 }
             }
 
+            // FIX #3: Added input validation before saving
             Button(
-                onClick = { productViewModel.uploadProduct(
-                    imageUri,
-                    product_name,
-                    price,
-                    quantity,
-                    dateManufacture,
-                    barcodeNumber,
-                    description,
-                    context,
-                    navController,
-
-                ) },
+                onClick = {
+                    when {
+                        product_name.isBlank() -> {
+                            android.widget.Toast.makeText(context, "Please enter product name", android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                        price.isBlank() -> {
+                            android.widget.Toast.makeText(context, "Please enter price", android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                        quantity.isBlank() -> {
+                            android.widget.Toast.makeText(context, "Please enter quantity", android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            productViewModel.uploadProduct(
+                                imageUri,
+                                product_name,
+                                price,
+                                quantity,
+                                dateManufacture,
+                                barcodeNumber,
+                                description,
+                                context,
+                                navController,
+                            )
+                        }
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(0.7f)
             ) {
                 Text("Save Product")
@@ -233,6 +243,7 @@ fun AddProductScreen(navController: NavController) {
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AddProductScreenPreview(){
