@@ -1,10 +1,9 @@
 package com.example.possystem.ui.theme.screens.product
 
-
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -45,30 +44,43 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.possystem.data.ProductViewModel
 import com.example.possystem.models.ProductModel
-
+import com.example.possystem.navigation.ROUTE_UPDATE_PRODUCT
 
 @Composable
 fun ProductListScreen(navController: NavController) {
-    val ProductViewModel: ProductViewModel = viewModel()
-    val products = ProductViewModel.products
+    val productViewModel: ProductViewModel = viewModel()
+    val products = productViewModel.products
     val context = LocalContext.current
+
     LaunchedEffect(Unit) {
-        ProductViewModel.fetchProduct(context)
+        productViewModel.fetchProduct(context)
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.LightGray),
-        contentPadding = PaddingValues(vertical = 50.dp, horizontal = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(products) { product ->
-            ProductCard(
-                product = product,
-                onDelete = { },
-                navController = navController
-            )
+    if (products.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.LightGray),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("No products found", color = Color.Gray)
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.LightGray),
+            contentPadding = PaddingValues(vertical = 50.dp, horizontal = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(products, key = { it.id ?: "" }) { product ->
+                ProductCard(
+                    product = product,
+                    // ✅ FIX: delete is now wired to the ViewModel
+                    onDelete = { id -> productViewModel.deleteProduct(id, context) },
+                    navController = navController
+                )
+            }
         }
     }
 }
@@ -85,7 +97,7 @@ fun ProductCard(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text("Confirm Delete") },
-            text = { Text("Are you sure you want to delete this product?") },
+            text = { Text("Are you sure you want to delete \"${product.product_name}\"?") },
             confirmButton = {
                 TextButton(onClick = {
                     showDialog = false
@@ -127,16 +139,14 @@ fun ProductCard(
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = product.product_name ?: "No Name",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "Price: ${product.price ?: "N/A"}",
+                        text = "Price: KES ${product.price ?: "N/A"}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -155,7 +165,8 @@ fun ProductCard(
                 horizontalArrangement = Arrangement.End
             ) {
                 TextButton(
-                    onClick = { navController.navigate("update_product/${product.id}") }
+                    // ✅ FIX: now uses ROUTE_UPDATE_PRODUCT constant — matches AppNavHost exactly
+                    onClick = { navController.navigate("$ROUTE_UPDATE_PRODUCT/${product.id}") }
                 ) {
                     Text(
                         text = "Update",
@@ -179,4 +190,3 @@ fun ProductCard(
         }
     }
 }
-

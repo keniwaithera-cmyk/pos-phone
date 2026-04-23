@@ -45,9 +45,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    // FIX: Added splashscreen library — resolves "Unresolved reference 'splashscreen'"
+
     implementation("androidx.core:core-splashscreen:1.0.1")
-    // FIX: Added Material Components — required for Theme.MaterialComponents in themes.xml
+
     implementation("com.google.android.material:material:1.12.0")
     implementation("io.coil-kt:coil-compose:2.0.0")
     implementation(libs.firebase.auth)

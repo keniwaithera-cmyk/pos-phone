@@ -1,200 +1,202 @@
 package com.example.possystem.ui.theme.screens.dashboard
 
-import android.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.possystem.navigation.ROUTE_REGISTER
-// For Scrolling
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-
-// For the Graph Drawing
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.asAndroidPath
-import androidx.compose.ui.graphics.asComposePath
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.possystem.data.AuthViewModel
+import com.example.possystem.navigation.ROUTE_ADD_PRODUCT
 import com.example.possystem.navigation.ROUTE_VIEW_PRODUCT
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Dashboard(navController: NavController){
+fun Dashboard(navController: NavController) {
     var selectedItem by remember { mutableStateOf(0) }
-    val authViewModel: AuthViewModel= viewModel()
+    val authViewModel: AuthViewModel = viewModel()
     val context = LocalContext.current
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(text ="POS Dashboard", fontWeight = FontWeight.Bold ) }
-            , colors = TopAppBarDefaults.topAppBarColors(Color.Green),
-            actions = {
-                Text(
-                    text = "LogOut",
-                    fontSize = 20.sp,
-                    color = Color.Red,
-                    modifier = Modifier.clickable {
-                        authViewModel.logout(navController, context)
-                    }
+        topBar = {
+            TopAppBar(
+                title = { Text("POS Dashboard", fontWeight = FontWeight.Bold) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Green),
+                actions = {
+                    Text(
+                        text = "Logout",
+                        fontSize = 16.sp,
+                        color = Color.Red,
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .clickable { authViewModel.logout(navController, context) }
+                    )
+                }
+            )
+        },
+        bottomBar = {
+            NavigationBar(containerColor = Color.Blue) {
+                NavigationBarItem(
+                    selected = selectedItem == 0,
+                    onClick = { selectedItem = 0 },
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+                    label = { Text("Home") }
                 )
-            })},
-        bottomBar = { NavigationBar(containerColor = Color.Green){
-            NavigationBarItem(
-                selected = selectedItem == 0,
-                onClick = { selectedItem = 0},
-                icon = { Icon(Icons.Default.Home,null) },
-                label = { Text("Home", color = Color.Black) }
-            )
-            NavigationBarItem(
-                selected = selectedItem == 0,
-                onClick = { selectedItem = 0},
-                icon = { Icon(Icons.Default.Settings,null) },
-                label = { Text("Settings", color = Color.Black) }
-            )
-            NavigationBarItem(
-                selected = selectedItem == 0,
-                onClick = { selectedItem = 0},
-                icon = { Icon(Icons.Default.Person,null) },
-                label = { Text("Person", color = Color.Black) }
-            )
-        } }
-    ) {padding ->
-        Column(modifier = Modifier.padding(padding).verticalScroll(rememberScrollState())){
-            Text(text = "Business Overview",
-                fontSize = 25.sp,
+                NavigationBarItem(
+                    selected = selectedItem == 1,
+                    onClick = {
+                        selectedItem = 1
+                        navController.navigate(ROUTE_ADD_PRODUCT)
+                    },
+                    icon = { Icon(Icons.Default.Add, contentDescription = "Add Product") },
+                    label = { Text("Add") }
+                )
+                NavigationBarItem(
+                    selected = selectedItem == 2,
+                    onClick = {
+                        selectedItem = 2
+                        navController.navigate(ROUTE_VIEW_PRODUCT)
+                    },
+                    icon = { Icon(Icons.Default.List, contentDescription = "Products") },
+                    label = { Text("Products") }
+                )
+                NavigationBarItem(
+                    selected = selectedItem == 3,
+                    onClick = { selectedItem = 3 },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+                    label = { Text("Profile") }
+                )
+            }
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = "Business Overview",
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
 
+            // Revenue Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.Green),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF2E7D32)),
                 elevation = CardDefaults.cardElevation(6.dp)
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
-                    Text("Today's Revenue", color = Color.Black, fontSize = 20.sp)
-
+                    Text("Today's Revenue", color = Color.White, fontSize = 16.sp)
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "Kes 12,500",
-                        fontSize = 30.sp,
+                        "KES 12,500",
+                        fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = Color.White
                     )
-
                 }
-
             }
 
-
-            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),)
-            {
+            // Quick Action Cards
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 Card(
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.Green),
-                    elevation = CardDefaults.cardElevation(6.dp)
-                ){
-                    Box(modifier = Modifier.padding(12.dp),
-                        contentAlignment = Alignment.Center)
-                    {Text(text = "New Products", fontSize = 20.sp, color = Color.Black)}
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { navController.navigate(ROUTE_ADD_PRODUCT) },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF4CAF50)),
+                    elevation = CardDefaults.cardElevation(4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("+ New Product", fontSize = 15.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+                    }
                 }
 
                 Card(
-                    modifier = Modifier.weight(1f).clickable{
-                        navController.navigate(ROUTE_VIEW_PRODUCT)
-                    },
-                    shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.Green),
-                    elevation = CardDefaults.cardElevation(6.dp)
-                ){
-                    Box(modifier = Modifier.padding(12.dp),
-                        contentAlignment = Alignment.Center)
-                    {Text(text = "Products", fontSize = 20.sp, color = Color.Black)}
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { navController.navigate(ROUTE_VIEW_PRODUCT) },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF4CAF50)),
+                    elevation = CardDefaults.cardElevation(4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("View Products", fontSize = 15.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+                    }
                 }
-
-
-
-
-
             }
+
+            // Profit Graph
             val myData = listOf(4000f, 9000f, 6000f, 15000f, 10000f, 18000f, 14000f)
             ProfitGraph(profitData = myData)
-
         }
-
     }
-
 }
 
 @Composable
 fun ProfitGraph(profitData: List<Float>) {
-
     val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 
-
-    Column(modifier = Modifier.fillMaxWidth().padding(top = 12.dp)) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Weekly Profit Trend",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
-                .padding(top = 8.dp),
+                .height(200.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             elevation = CardDefaults.cardElevation(2.dp)
         ) {
-
             Column(modifier = Modifier.padding(16.dp)) {
-
-                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                    androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    Canvas(modifier = Modifier.fillMaxSize()) {
                         val width = size.width
                         val height = size.height
                         val maxProfit = profitData.maxOrNull() ?: 1f
@@ -215,7 +217,7 @@ fun ProfitGraph(profitData: List<Float>) {
 
                         drawPath(
                             fillPath,
-                            Brush.verticalGradient(listOf(Color.Green.copy(0.2f), Color.Transparent))
+                            Brush.verticalGradient(listOf(Color(0xFF4CAF50).copy(alpha = 0.3f), Color.Transparent))
                         )
                         drawPath(
                             strokePath,
@@ -223,22 +225,16 @@ fun ProfitGraph(profitData: List<Float>) {
                             style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
                         )
                     }
-
                 }
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween // Spreads days out evenly
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     days.forEach { day ->
-                        Text(
-                            text = day,
-                            fontSize = 10.sp, // Small font to ensure they all fit
-                            color = Color.Gray,
-                            fontWeight = FontWeight.Medium
-                        )
+                        Text(text = day, fontSize = 10.sp, color = Color.Gray)
                     }
                 }
             }
@@ -246,10 +242,8 @@ fun ProfitGraph(profitData: List<Float>) {
     }
 }
 
-
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun DashboardPreview(){
+fun DashboardPreview() {
     Dashboard(rememberNavController())
 }
